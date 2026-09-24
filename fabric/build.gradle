@@ -57,3 +57,28 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
 }
+
+loom {
+    runs {
+        client {
+            client()
+            vmArgs(
+                "-Dmixin.debug.verbose=true",
+                "-Dmixin.debug.strict=true",
+                "-Dmixin.debug.verify=true",
+                "-Dmixin.dumpTargetOnFailure=true",
+                "-Dmixin.checks.interfaces=true"
+            )
+        }
+        server {
+            server()
+            vmArgs(
+                "-Dmixin.debug.verbose=true",
+                "-Dmixin.debug.strict=true",
+                "-Dmixin.debug.verify=true",
+                "-Dmixin.dumpTargetOnFailure=true",
+                "-Dmixin.checks.interfaces=true"
+            )
+        }
+    }
+}
