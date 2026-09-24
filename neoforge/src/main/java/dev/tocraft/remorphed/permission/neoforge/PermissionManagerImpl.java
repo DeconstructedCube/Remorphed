@@ -1,7 +1,7 @@
 package dev.tocraft.remorphed.permission.neoforge;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
@@ -73,7 +73,7 @@ public class PermissionManagerImpl {
 
         // Entity type permissions for all registered entities
         BuiltInRegistries.ENTITY_TYPE.forEach(entityType -> {
-            ResourceLocation key = EntityType.getKey(entityType);
+            Identifier key = EntityType.getKey(entityType);
             PermissionManagerImpl.createNode("type." + key);
         });
 

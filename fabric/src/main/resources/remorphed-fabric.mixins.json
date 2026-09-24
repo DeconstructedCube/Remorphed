@@ -6,7 +6,6 @@
   "mixins": [
   ],
   "client": [
-    "client.GuiRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

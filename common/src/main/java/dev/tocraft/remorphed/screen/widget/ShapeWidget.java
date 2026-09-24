@@ -50,23 +50,22 @@ public abstract class ShapeWidget extends AbstractButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // Add to favorites
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean bl) {
         if (active && visible && isHovered() && Minecraft.getInstance().player != null) {
-            if (button == 1) {
+            if (event.button() == 1) {
                 isFavorite = !isFavorite;
                 sendFavoriteRequest(isFavorite);
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
-            } else if (button == 2 && availability != -1) {
+            } else if (event.button() == 2 && availability != -1) {
                 deletePoint();
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bl);
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         if (!crashed) {
             // make the widget is even DARKER when hovered
             if (isHoveredOrFocused()) {
@@ -96,7 +95,7 @@ public abstract class ShapeWidget extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(net.minecraft.client.input.InputWithModifiers inputWithModifiers) {
         // switch to new shape
         if (!isCurrent) {
             // Update 2nd Shape
@@ -108,12 +107,12 @@ public abstract class ShapeWidget extends AbstractButton {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.active && this.visible && isHovered() && keyCode == GLFW.GLFW_KEY_X && availability != -1) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent keyEvent) {
+        if (this.active && this.visible && isHovered() && keyEvent.key() == GLFW.GLFW_KEY_X && availability != -1) {
             deletePoint();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     abstract void sendDeleteShapePacket();

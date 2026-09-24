@@ -1,0 +1,59 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+    modImplementation "dev.tocraft:craftedcore-fabric:$rootProject.craftedcore_version"
+    modImplementation "dev.tocraft:walkers-fabric:$rootProject.woodwalkers_version"
+    modCompileOnly "dev.tocraft:skinshifter-fabric:$rootProject.skinshifter_version"
+    include(modImplementation("me.lucko:fabric-permissions-api:0.6.1"))
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('fabric.mod.json') {
+        expand(
+            "version": project.version,
+            "minecraft_version": rootProject.minecraft_version,
+            "craftedcore_version": rootProject.craftedcore_version,
+            "woodwalkers_version": rootProject.woodwalkers_version,
+            "skinshifter_version": rootProject.skinshifter_version
+        )
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+}

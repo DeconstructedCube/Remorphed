@@ -1,0 +1,10 @@
+architectury {
+    common("fabric")
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    modImplementation "dev.tocraft:craftedcore-common:$rootProject.craftedcore_version"
+    modImplementation "dev.tocraft:walkers-common:$rootProject.woodwalkers_version"
+    modCompileOnly "dev.tocraft:skinshifter-common:$rootProject.skinshifter_version"
+}

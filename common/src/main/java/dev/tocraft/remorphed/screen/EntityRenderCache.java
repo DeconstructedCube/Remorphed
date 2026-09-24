@@ -98,7 +98,7 @@ public class EntityRenderCache {
 
         for (GameProfile profile : unlockedSkins) {
             // Skip player's own skin
-            if (profile.getId().equals(player.getUUID())) {
+            if (profile.id().equals(player.getUUID())) {
                 continue;
             }
 
@@ -119,7 +119,7 @@ public class EntityRenderCache {
                 PLAYER_CACHE.putIfAbsent(profile, new CachedEntityData(fakePlayer));
             } catch (Exception e) {
                 Remorphed.LOGGER.warn("[Remorphed] Failed to pre-load player skin for profile {}: {}",
-                        profile.getName(), e.getMessage());
+                        profile.name(), e.getMessage());
             }
         }
     }
@@ -222,7 +222,7 @@ public class EntityRenderCache {
             // Use putIfAbsent to avoid race conditions
             PLAYER_CACHE.putIfAbsent(profile, new CachedEntityData(fakePlayer));
         } catch (Exception e) {
-            Remorphed.LOGGER.warn("[Remorphed] Failed to cache player skin on-demand: {}", profile.getName(), e);
+            Remorphed.LOGGER.warn("[Remorphed] Failed to cache player skin on-demand: {}", profile.name(), e);
         }
     }
 

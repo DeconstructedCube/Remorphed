@@ -10,6 +10,7 @@ import dev.tocraft.walkers.network.impl.SwapPackets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -17,10 +18,10 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -38,16 +39,14 @@ public class PlayerWidget extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         AbstractClientPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            ResourceLocation skinLocation = player.getSkin().texture();
+            Identifier skinLocation = player.getSkin().body().texturePath();
             if (Remorphed.foundSkinShifter && !player.getUUID().equals(SkinShifter.getCurrentSkin(player))) {
-                // still render own skin as icon when in another skin
                 var skin = getPlayerSkin(player);
-                skinLocation = skin.getNow(Optional.empty()).map(PlayerSkin::texture).orElse(skinLocation);
+                skinLocation = skin.getNow(Optional.empty()).map(s -> s.body().texturePath()).orElse(skinLocation);
             }
-
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, skinLocation, getX(), getY(), 8.0f, 8, getWidth(), getHeight(), 8, 8, 64, 64);
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, skinLocation, getX(), getY(), 40.0f, 8, getWidth(), getHeight(), 8, 8, 64, 64);
         }
@@ -59,7 +58,7 @@ public class PlayerWidget extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers inputWithModifiers) {
         if (Minecraft.getInstance().player != null) {
             if (PlayerShape.getCurrentShape(Minecraft.getInstance().player) != null) {
                 SwapPackets.sendSwapRequest();
@@ -79,6 +78,6 @@ public class PlayerWidget extends AbstractButton {
 
     private static @NotNull CompletableFuture<Optional<PlayerSkin>> getPlayerSkin(Player player) {
         CompletableFuture<Optional<GameProfile>> profileFuture = SkinPlayerData.getSkinProfile(player.getUUID());
-        return profileFuture.thenApply((profile) -> profile.map((gameProfile) -> Minecraft.getInstance().getSkinManager().getInsecureSkin(gameProfile)));
+        return profileFuture.thenApply((profile) -> profile.map((gameProfile) -> Minecraft.getInstance().getSkinManager().createLookup(gameProfile, false).get()));
     }
 }

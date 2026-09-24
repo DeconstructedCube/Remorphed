@@ -7,10 +7,8 @@ import dev.tocraft.craftedcore.registration.KeyBindingRegistry;
 import dev.tocraft.remorphed.handler.client.ClientDisconnectHandler;
 import dev.tocraft.remorphed.handler.client.ClientPlayerRespawnHandler;
 import dev.tocraft.remorphed.handler.client.EntityRenderCacheHandler;
-import dev.tocraft.remorphed.mixin.client.accessor.GuiGraphicsAccessor;
-import dev.tocraft.remorphed.network.ClientNetworking;
-import dev.tocraft.remorphed.screen.render.GuiShapeRenderState;
 import dev.tocraft.remorphed.tick.KeyPressHandler;
+import dev.tocraft.remorphed.network.ClientNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
@@ -19,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -27,9 +26,9 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class RemorphedClient {
+    public static final KeyMapping.Category REMORPHED_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("remorphed", "remorphed"));
     public static final KeyMapping MENU_KEY = new KeyMapping("key.remorphed_menu", InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_B, "key.categories.remorphed");
-
+            GLFW.GLFW_KEY_B, REMORPHED_CATEGORY);
     public void initialize() {
         KeyBindingRegistry.register(MENU_KEY);
 
@@ -58,9 +57,10 @@ public class RemorphedClient {
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         EntityRenderer<? super LivingEntity, ?> entityRenderer = entityRenderDispatcher.getRenderer(entity);
         EntityRenderState entityRenderState = entityRenderer.createRenderState(entity, 1.0F);
-        entityRenderState.hitboxesRenderState = null;
+        entityRenderState.lightCoords = 15728880;
+        entityRenderState.shadowPieces.clear();
+        entityRenderState.outlineColor = 0;
 
-        GuiGraphicsAccessor accessor = ((GuiGraphicsAccessor) guiGraphics);
-        accessor.getGuiRenderState().submitPicturesInPictureState(new GuiShapeRenderState(id, entityRenderState, translation, rotation, overrideCameraAngle, x1, y1, x2, y2, scale, accessor.getScissorStack().peek()));
+        guiGraphics.submitEntityRenderState(entityRenderState, scale, translation, rotation, overrideCameraAngle, x1, y1, x2, y2);
     }
 }

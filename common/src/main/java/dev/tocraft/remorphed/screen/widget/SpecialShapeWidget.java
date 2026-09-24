@@ -48,7 +48,7 @@ public class SpecialShapeWidget extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Remorphed.id("textures/gui/wolf.png"), getX(), getY(), 0, 0, getWidth(), getHeight(), 15, 15, 15, 15);
 
         if (!isCurrent && !isAvailable) {
@@ -62,7 +62,7 @@ public class SpecialShapeWidget extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(net.minecraft.client.input.InputWithModifiers inputWithModifiers) {
         UUID profileId = Minecraft.getInstance().getUser().getProfileId();
         if (!isCurrent && isAvailable && Walkers.hasSpecialShape(profileId)) {
             // get variant range

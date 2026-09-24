@@ -10,7 +10,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,7 +65,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void serverTick(CallbackInfo info) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             Remorphed.sync((ServerPlayer) (Object) this);
         }
     }
@@ -175,7 +175,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
         ListTag unlockedShapes = tag.getListOrEmpty(UNLOCKED_SHAPES);
         unlockedShapes.forEach(entry -> {
             if (entry instanceof CompoundTag) {
-                ResourceLocation typeId = ResourceLocation.parse(((CompoundTag) entry).getString("id").orElseThrow());
+                Identifier typeId = Identifier.parse(((CompoundTag) entry).getString("id").orElseThrow());
                 int typeVariantId = ((CompoundTag) entry).getIntOr("variant", -1);
                 int killAmount = ((CompoundTag) entry).getIntOr("killAmount", 0);
 
@@ -185,7 +185,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
         ListTag favoriteShapes = tag.getListOrEmpty(FAVORITE_SHAPES);
         favoriteShapes.forEach(entry -> {
             if (entry instanceof CompoundTag) {
-                ResourceLocation typeId = ResourceLocation.parse(((CompoundTag) entry).getString("id").orElseThrow());
+                Identifier typeId = Identifier.parse(((CompoundTag) entry).getString("id").orElseThrow());
                 int typeVariantId = ((CompoundTag) entry).getIntOr("variant", -1);
 
                 remorphed$favoriteShapes.add(ShapeType.from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId).map(Holder::value).orElse(null), typeVariantId));
@@ -217,7 +217,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
                 UUID skinId = UUIDUtil.uuidFromIntArray(((CompoundTag) entry).getIntArray("uuid").orElseThrow());
                 remorphed$SkinMorphCounter.put(skinId, count);
             } else {
-                ResourceLocation typeId = ResourceLocation.parse(((CompoundTag) entry).getString("id").orElseThrow());
+                Identifier typeId = Identifier.parse(((CompoundTag) entry).getString("id").orElseThrow());
                 int typeVariantId = ((CompoundTag) entry).getIntOr("variant", -1);
                 remorphed$ShapeMorphCounter.put(ShapeType.from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId).map(Holder::value).orElse(null), typeVariantId), count);
             }

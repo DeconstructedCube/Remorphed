@@ -80,12 +80,12 @@ public class RemorphedHelpScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode < 257 && keyCode != 32) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent keyEvent) {
+        if (keyEvent.key() < 257 && keyEvent.key() != 32) {
             onClose();
             return true;
         } else {
-            return super.keyPressed(keyCode, scanCode, modifiers);
+            return super.keyPressed(keyEvent);
         }
     }
 

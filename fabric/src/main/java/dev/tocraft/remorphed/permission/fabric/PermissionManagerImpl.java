@@ -16,7 +16,7 @@ public class PermissionManagerImpl {
             return Permissions.check(player, "remorphed." + permission, 2);
         } catch (Throwable e) {
             // Permissions API not available, fall back to OP level 2
-            return player.hasPermissions(2);
+            return net.minecraft.commands.Commands.LEVEL_GAMEMASTERS.check(player.createCommandSourceStack().permissions());
         }
     }
 }

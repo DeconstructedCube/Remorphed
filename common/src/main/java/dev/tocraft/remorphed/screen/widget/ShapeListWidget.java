@@ -27,7 +27,7 @@ public class ShapeListWidget extends ContainerObjectSelectionList<ShapeListWidge
     }
 
     public int rowHeight() {
-        return itemHeight;
+        return defaultEntryHeight;
     }
 
     @Override
@@ -43,7 +43,12 @@ public class ShapeListWidget extends ContainerObjectSelectionList<ShapeListWidge
         }
 
         @Override
-        public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
+        public void renderContent(@NotNull GuiGraphics guiGraphics, int index, int top, boolean hovering, float delta) {
+            int width = Remorphed.CONFIG.row_width;
+            int left = (guiGraphics.guiWidth() - width) / 2;
+            int height = ITEM_HEIGHT;
+            int mouseX = (int) (Minecraft.getInstance().mouseHandler.xpos() * (double) guiGraphics.guiWidth() / (double) Minecraft.getInstance().getWindow().getScreenWidth());
+            int mouseY = (int) (Minecraft.getInstance().mouseHandler.ypos() * (double) guiGraphics.guiHeight() / (double) Minecraft.getInstance().getWindow().getScreenHeight());
             for (int i = 0; i < widgets.length; i++) {
                 ShapeWidget widget = widgets[i];
 
@@ -68,13 +73,13 @@ public class ShapeListWidget extends ContainerObjectSelectionList<ShapeListWidge
         }
 
         @Override
-        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        public boolean keyPressed(net.minecraft.client.input.KeyEvent keyEvent) {
             for (GuiEventListener child : children()) {
-                if (child.keyPressed(keyCode, scanCode, modifiers)) {
+                if (child.keyPressed(keyEvent)) {
                     return true;
                 }
             }
-            return super.keyPressed(keyCode, scanCode, modifiers);
+            return super.keyPressed(keyEvent);
         }
     }
 
@@ -88,12 +93,12 @@ public class ShapeListWidget extends ContainerObjectSelectionList<ShapeListWidge
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent keyEvent) {
         for (ShapeRow child : children()) {
-            if (child.keyPressed(keyCode, scanCode, modifiers)) {
+            if (child.keyPressed(keyEvent)) {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 }

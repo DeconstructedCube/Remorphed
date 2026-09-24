@@ -30,7 +30,7 @@ public class SkinWidget extends ShapeWidget {
         this.size = (int) (Remorphed.CONFIG.entity_size * (1 / (Math.max(fakePlayer.getBbHeight(), fakePlayer.getBbWidth()))));
         this.skin = skin;
         this.fakePlayer = fakePlayer;
-        setTooltip(Tooltip.create(Component.literal(skin.getName())));
+        setTooltip(Tooltip.create(Component.literal(skin.name())));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SkinWidget extends ShapeWidget {
             int m = leftPos + 20;
             int n = topPos + 35;
             // Use a unique ID for each skin widget (based on skin UUID hash)
-            int id = skin.getId().hashCode();
+            int id = skin.id().hashCode();
             RemorphedClient.renderEntityInInventory(id, guiGraphics, k, l, m, n, (float) size,
                     new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI),
                     null, fakePlayer);
@@ -66,6 +66,6 @@ public class SkinWidget extends ShapeWidget {
 
     @Override
     void sendDeleteShapePacket() {
-        NetworkHandler.sendDeleteShapePacket(skin.getId());
+        NetworkHandler.sendDeleteShapePacket(skin.id());
     }
 }

@@ -16,7 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -61,7 +61,7 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
             // Render Trait Icons first
             int row = 0;
             int column = 0;
-            List<ResourceLocation> renderedTraits = new ArrayList<>();
+            List<Identifier> renderedTraits = new ArrayList<>();
             List<ShapeTrait<T>> traits = TraitRegistry.getAll(entity);
             for (ShapeTrait<T> trait : traits) {
                 if (trait != null && (!renderedTraits.contains(trait.getId()) || trait.iconMightDiffer())) {
@@ -100,8 +100,6 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
             setCrashed();
             MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
             immediate.endBatch();
-            EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-            entityRenderDispatcher.setRenderShadow(true);
             RenderSystem.getModelViewStack().popMatrix();
         }
     }

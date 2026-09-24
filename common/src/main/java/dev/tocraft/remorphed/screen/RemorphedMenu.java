@@ -132,15 +132,15 @@ public class RemorphedMenu extends Screen {
                 UUID currentSkin = SkinShifter.getCurrentSkin(minecraft.player);
 
                 unlockedSkins.sort((first, second) -> {
-                    if (Objects.equals(first.getId(), currentSkin) && currentShape != null) {
+                    if (Objects.equals(first.id(), currentSkin) && currentShape != null) {
                         return -1;
-                    } else if (Objects.equals(second.getId(), currentSkin) && currentShape != null) {
+                    } else if (Objects.equals(second.id(), currentSkin) && currentShape != null) {
                         return 1;
                     } else {
-                        boolean firstIsFav = PlayerMorph.getFavoriteSkinIds(minecraft.player).contains(first.getId());
-                        boolean secondIsFav = PlayerMorph.getFavoriteSkinIds(minecraft.player).contains(second.getId());
+                        boolean firstIsFav = PlayerMorph.getFavoriteSkinIds(minecraft.player).contains(first.id());
+                        boolean secondIsFav = PlayerMorph.getFavoriteSkinIds(minecraft.player).contains(second.id());
                         if (firstIsFav == secondIsFav) {
-                            return first.getName().compareTo(second.getName());
+                            return first.name().compareTo(second.name());
                         } else if (firstIsFav) {
                             return -1;
                         } else {
@@ -163,7 +163,7 @@ public class RemorphedMenu extends Screen {
                     .toList();
             List<GameProfile> filteredSkins = unlockedSkins
                     .stream()
-                    .filter(skin -> text.isEmpty() || skin.getName().toUpperCase().contains(text.toUpperCase()) || skin.getId().toString().contains(text.toUpperCase()))
+                    .filter(skin -> text.isEmpty() || skin.name().toUpperCase().contains(text.toUpperCase()) || skin.id().toString().contains(text.toUpperCase()))
                     .toList();
 
             populateShapeWidgets(filteredShapes, filteredSkins);
@@ -201,7 +201,7 @@ public class RemorphedMenu extends Screen {
                         GameProfile skinProfile = skinProfiles.get(listIndex);
                         AbstractClientPlayer fakePlayer = renderPlayers.get(skinProfile);
                         if (fakePlayer != null) {
-                            boolean bl = Objects.equals(SkinShifter.getCurrentSkin(minecraft.player), skinProfile.getId()) && currentType == null;
+                            boolean bl = Objects.equals(SkinShifter.getCurrentSkin(minecraft.player), skinProfile.id()) && currentType == null;
                             if (bl) currentRow = i;
                             row.add(new SkinWidget(
                                     0,
@@ -213,7 +213,7 @@ public class RemorphedMenu extends Screen {
                                     this,
                                     PlayerMorph.getFavoriteSkins(minecraft.player).contains(skinProfile),
                                     bl,
-                                    Remorphed.canUseEveryShape(minecraft.player) || Remorphed.CONFIG.playerKillValue < 1 ? -1 : Remorphed.CONFIG.playerKillValue * PlayerMorph.getPlayerKills(minecraft.player, skinProfile.getId()) - PlayerMorph.getCounter(minecraft.player, skinProfile.getId())
+                                    Remorphed.canUseEveryShape(minecraft.player) || Remorphed.CONFIG.playerKillValue < 1 ? -1 : Remorphed.CONFIG.playerKillValue * PlayerMorph.getPlayerKills(minecraft.player, skinProfile.id()) - PlayerMorph.getCounter(minecraft.player, skinProfile.id())
                             ));
                         } else {
                             Remorphed.LOGGER.error("invalid skin profile: {}", skinProfile);
@@ -288,7 +288,7 @@ public class RemorphedMenu extends Screen {
         List<GameProfile> validUnlocked = Remorphed.getUnlockedSkins(player);
 
         for (GameProfile profile : validUnlocked) {
-            if (profile.getId() != player.getUUID()) {
+            if (profile.id() != player.getUUID()) {
                 // Try to get from global cache first
                 EntityRenderCache.CachedEntityData cachedData = EntityRenderCache.getCachedPlayerSkin(profile);
 
@@ -383,12 +383,12 @@ public class RemorphedMenu extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent keyEvent) {
         for (GuiEventListener child : children()) {
-            if (child.keyPressed(keyCode, scanCode, modifiers)) {
+            if (child.keyPressed(keyEvent)) {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 }
