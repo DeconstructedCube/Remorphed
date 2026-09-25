@@ -30,15 +30,14 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@SuppressWarnings("this-escape")
 @Environment(EnvType.CLIENT)
 public class RemorphedMenu extends Screen {
-    @Nullable
     protected ShapeListWidget list;
     public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     private static String lastSearchContents = "";

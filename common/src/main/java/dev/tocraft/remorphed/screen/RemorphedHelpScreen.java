@@ -15,6 +15,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("this-escape")
 @Environment(EnvType.CLIENT)
 public class RemorphedHelpScreen extends Screen {
     public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);

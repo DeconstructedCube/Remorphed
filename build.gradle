@@ -17,7 +17,14 @@ subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
+    apply plugin: 'checkstyle'
+    apply from: rootProject.file("gradle/mixin-check.gradle")
 
+    checkstyle {
+        toolVersion = '10.21.4'
+        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+        maxWarnings = 0
+    }
     base {
         archivesName = "$rootProject.archives_name-$project.name"
     }
@@ -45,8 +52,20 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         it.options.release = 21
         it.options.encoding = "UTF-8"
+        it.options.compilerArgs << "-Xlint:all"
+        it.options.compilerArgs << "-Xlint:-processing"
+        it.options.compilerArgs << "-Xlint:-classfile"
+        it.options.compilerArgs << "-Xlint:-serial"
+        it.options.compilerArgs << "-Xlint:-cast"
+        it.options.compilerArgs << "-Xlint:-rawtypes"
+        it.options.compilerArgs << "-Xlint:-unchecked"
+        it.options.compilerArgs << "-Xlint:-deprecation"
+        it.options.compilerArgs << "-Xlint:-this-escape"
+        it.options.compilerArgs << "-Werror"
     }
-
+    tasks.named('compileJava').configure {
+        finalizedBy 'checkstyleMain'
+    }
     publishing {
         publications {
             mavenJava(MavenPublication) {
