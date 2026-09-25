@@ -46,4 +46,13 @@ subprojects {
         it.options.release = 21
         it.options.encoding = "UTF-8"
     }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
+            }
+        }
+    }
 }
