@@ -33,7 +33,7 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
     private final int id;
 
     public EntityWidget(int id, int x, int y, int width, int height, ShapeType<T> type, @NotNull T entity, Screen parent, boolean isFavorite, boolean current, int availability) {
-        super(x, y, width, height, parent, isFavorite, current, availability);
+        super(x, y, width, height, ShapeType.createTooltipText(entity), parent, isFavorite, current, availability);
         this.size = (int) (Remorphed.CONFIG.entity_size * (1 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))));
         this.type = type;
         this.entity = entity;
@@ -54,36 +54,7 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
 
     @Override
     protected void renderShape(GuiGraphics guiGraphics) {
-        if (Remorphed.displayDataInMenu) {
-            final int iconS = 16; // traits are always 16x16 (since that's the item size)
-
-            // Render Trait Icons first
-            int row = 0;
-            int column = 0;
-            List<Identifier> renderedTraits = new ArrayList<>();
-            List<ShapeTrait<T>> traits = TraitRegistry.getAll(entity);
-            for (ShapeTrait<T> trait : traits) {
-                if (trait != null && (!renderedTraits.contains(trait.getId()) || trait.iconMightDiffer())) {
-                    boolean bl = trait.renderIcon(RenderPipelines.GUI_TEXTURED, guiGraphics, getX() + column, getY() + row, iconS, iconS);
-                    if (bl) {
-                        // prevent traits outside of entity widget
-                        if (row + iconS >= getHeight()) {
-                            column += iconS;
-                            row = 0;
-                        } else {
-                            row += iconS;
-                        }
-                        if (column + iconS >= getWidth()) {
-                            break;
-                        }
-                        renderedTraits.add(trait.getId());
-                    }
-                }
-            }
-        }
-
-        // Some entities (namely Aether mobs) crash when rendered in a GUI.
-        // Unsure as to the cause, but this try/catch should prevent the game from entirely dipping out.
+        // Render 3D entity model in the center
         try {
             int leftPos = (int) (getX() + (float) this.getWidth() / 2);
             int topPos = (int) (getY() + this.getHeight() * .75f);
@@ -100,6 +71,37 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
             MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
             immediate.endBatch();
             RenderSystem.getModelViewStack().popMatrix();
+        }
+
+        // Render compact trait badges in the top-left margin without blocking the model
+        if (Remorphed.displayDataInMenu) {
+            final int iconDisplaySize = 10;
+            final float scale = 10.0F / 16.0F; // scale 16x16 icon to 10x10
+            int row = 0;
+            int column = 0;
+            List<Identifier> renderedTraits = new ArrayList<>();
+            List<ShapeTrait<T>> traits = TraitRegistry.getAll(entity);
+            for (ShapeTrait<T> trait : traits) {
+                if (trait != null && (!renderedTraits.contains(trait.getId()) || trait.iconMightDiffer())) {
+                    if (row + iconDisplaySize > getHeight() - 2) {
+                        column += iconDisplaySize + 1;
+                        row = 0;
+                    }
+                    // Keep badges strictly within the left margin so they never cover the center model
+                    if (column + iconDisplaySize > (getWidth() / 3)) {
+                        break;
+                    }
+                    guiGraphics.pose().pushMatrix();
+                    guiGraphics.pose().translate(getX() + 2 + column, getY() + 2 + row);
+                    guiGraphics.pose().scale(scale, scale);
+                    boolean bl = trait.renderIcon(RenderPipelines.GUI_TEXTURED, guiGraphics, 0, 0, 16, 16);
+                    guiGraphics.pose().popMatrix();
+                    if (bl) {
+                        row += iconDisplaySize + 1;
+                        renderedTraits.add(trait.getId());
+                    }
+                }
+            }
         }
     }
 

@@ -26,7 +26,7 @@ public class SkinWidget extends ShapeWidget {
     private final int size;
 
     public SkinWidget(int x, int y, int width, int height, @NotNull GameProfile skin, @NotNull FakeClientPlayer fakePlayer, Screen parent, boolean isFavorite, boolean isCurrent, int availability) {
-        super(x, y, width, height, parent, isFavorite, isCurrent, availability);
+        super(x, y, width, height, Component.literal(skin.name()), parent, isFavorite, isCurrent, availability);
         this.size = (int) (Remorphed.CONFIG.entity_size * (1 / (Math.max(fakePlayer.getBbHeight(), fakePlayer.getBbWidth()))));
         this.skin = skin;
         this.fakePlayer = fakePlayer;

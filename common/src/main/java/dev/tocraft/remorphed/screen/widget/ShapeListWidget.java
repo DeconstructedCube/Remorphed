@@ -43,12 +43,11 @@ public class ShapeListWidget extends ContainerObjectSelectionList<ShapeListWidge
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics guiGraphics, int index, int top, boolean hovering, float delta) {
+        public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float delta) {
             int width = Remorphed.CONFIG.row_width;
             int left = (guiGraphics.guiWidth() - width) / 2;
             int height = ITEM_HEIGHT;
-            int mouseX = (int) (Minecraft.getInstance().mouseHandler.xpos() * (double) guiGraphics.guiWidth() / (double) Minecraft.getInstance().getWindow().getScreenWidth());
-            int mouseY = (int) (Minecraft.getInstance().mouseHandler.ypos() * (double) guiGraphics.guiHeight() / (double) Minecraft.getInstance().getWindow().getScreenHeight());
+            int top = this.getContentY();
             for (int i = 0; i < widgets.length; i++) {
                 ShapeWidget widget = widgets[i];
 

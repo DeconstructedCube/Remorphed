@@ -18,8 +18,8 @@ public abstract class ShapeWidget extends AbstractButton {
     private final boolean isCurrent;
     private int availability;
 
-    public ShapeWidget(float x, float y, float width, float height, Screen parent, boolean isFavorite, boolean isCurrent, int availability) {
-        super((int) x, (int) y, (int) width, (int) height, Component.nullToEmpty("WOLF"));
+    public ShapeWidget(float x, float y, float width, float height, Component message, Screen parent, boolean isFavorite, boolean isCurrent, int availability) {
+        super((int) x, (int) y, (int) width, (int) height, message != null ? message : Component.empty());
         this.parent = parent;
         this.isFavorite = isFavorite;
         this.isCurrent = isCurrent;

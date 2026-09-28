@@ -38,12 +38,12 @@ public abstract class GuiRendererMixin {
 
     // adds a new gui shape renderer per id and preps it
     @Inject(method = "preparePictureInPictureState", at = @At("HEAD"), cancellable = true)
-    public <T extends PictureInPictureRenderState> void getShapeRenderer(PictureInPictureRenderState state, int guiScale, boolean firstPass, CallbackInfoReturnable<Boolean> cir) {
+    public <T extends PictureInPictureRenderState> void getShapeRenderer(PictureInPictureRenderState state, int guiScale, CallbackInfo ci) {
         if (state instanceof GuiShapeRenderState shapeState) {
             GuiShapeRenderer renderer = this.walkers$shapeRenderer.computeIfAbsent(shapeState.id(), id -> new GuiShapeRenderer(id, bufferSource, Minecraft.getInstance().getEntityRenderDispatcher()));
 
             renderer.prepare(shapeState, renderState, guiScale);
-            cir.setReturnValue(true);
+            ci.cancel();
         }
     }
 
