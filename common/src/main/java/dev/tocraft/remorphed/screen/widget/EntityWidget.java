@@ -2,7 +2,6 @@ package dev.tocraft.remorphed.screen.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.tocraft.remorphed.Remorphed;
-import dev.tocraft.remorphed.RemorphedClient;
 import dev.tocraft.remorphed.network.NetworkHandler;
 import dev.tocraft.walkers.api.variant.ShapeType;
 import dev.tocraft.walkers.traits.ShapeTrait;
@@ -13,13 +12,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,17 +52,15 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
 
     @Override
     protected void renderShape(GuiGraphics guiGraphics) {
-        // Render 3D entity model in the center
+        // Render 3D entity model in the center using vanilla InventoryScreen centering logic
         try {
-            int leftPos = (int) (getX() + (float) this.getWidth() / 2);
-            int topPos = (int) (getY() + this.getHeight() * .75f);
-            int k = leftPos - 20;
-            int l = topPos - 25;
-            int m = leftPos + 20;
-            int n = topPos + 35;
-            RemorphedClient.renderEntityInInventory(id, guiGraphics, k, l, m, n, (float) size,
-                    new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI),
-                    null, entity);
+            int leftPos = getX() + getWidth() / 2;
+            int topPos = getY() + getHeight() / 2;
+            int x1 = leftPos - 20;
+            int y1 = topPos - 16;
+            int x2 = leftPos + 20;
+            int y2 = topPos + 16;
+            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, x1, y1, x2, y2, size, 0.0625F, 0.0F, 0.0F, entity);
         } catch (Exception e) {
             Remorphed.LOGGER.error("Error while rendering {}", ShapeType.createTooltipText(entity).getString(), e);
             setCrashed();
