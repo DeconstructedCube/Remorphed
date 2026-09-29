@@ -324,13 +324,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
                 }
             }
 
-            // remove one kill
-            if (k <= 1) {
-                int k2 = remorphed$unlockedShapes.containsKey(killType) ? remorphed$unlockedShapes.remove(killType) : 0;
+            // remove kills
+            int killRequirement = Remorphed.getKillToUnlock(type.getEntityType());
+            if (k <= killRequirement) {
+                remorphed$unlockedShapes.remove(killType);
             } else {
-                remorphed$unlockedShapes.put(killType, k - 1);
+                remorphed$unlockedShapes.put(killType, k - killRequirement);
             }
-
             // reset counter
             if (Walkers.CONFIG.unlockEveryVariant) {
                 ShapeType<? extends LivingEntity> ctype;
@@ -367,8 +367,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
         if (killValue > 0 && counter >= killValue) {
             // reset counter
             remorphed$SkinMorphCounter.remove(skinId);
-            // remove one kill
-            int k = remorphed$getKills(skinId) - 1;
+            // remove player kills
+            int playerKillRequirement = Remorphed.CONFIG.killToUnlockPlayers;
+            int k = remorphed$getKills(skinId) - playerKillRequirement;
             if (k <= 0) {
                 remorphed$unlockedSkins.remove(skinId);
             } else {

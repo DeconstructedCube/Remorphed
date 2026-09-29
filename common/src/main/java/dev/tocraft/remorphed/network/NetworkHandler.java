@@ -134,6 +134,7 @@ public class NetworkHandler {
                 UUID targetSkinUUID = UUIDUtil.uuidFromIntArray(compound.getIntArray("playerUUID").orElseThrow());
                 SkinShifter.setSkin((ServerPlayer) context.getPlayer(), targetSkinUUID);
                 PlayerMorph.handleSwap(context.getPlayer(), targetSkinUUID);
+                Remorphed.spawnWalkersParticles(context.getPlayer());
             } else {
                 Identifier typeId = Identifier.parse(compound.getString("id").orElseThrow());
                 int typeVariant = compound.getIntOr("variant", -1);
