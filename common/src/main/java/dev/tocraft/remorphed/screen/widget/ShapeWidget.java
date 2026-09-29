@@ -30,8 +30,7 @@ public abstract class ShapeWidget extends AbstractButton {
 
     protected abstract void sendSwap2ndShapeRequest();
 
-    protected abstract void renderShape(GuiGraphics guiGraphics);
-
+    protected abstract void renderShape(GuiGraphics guiGraphics, int mouseX, int mouseY);
     protected void setCrashed() {
         this.crashed = true;
     }
@@ -81,8 +80,7 @@ public abstract class ShapeWidget extends AbstractButton {
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Remorphed.id("textures/gui/deleted.png"), getX(), getY(), 0, 0, getWidth(), getHeight(), 48, 32, 48, 32);
             }
 
-            renderShape(guiGraphics);
-
+            renderShape(guiGraphics, mouseX, mouseY);
             // Render selected outline
             if (isCurrent) {
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Remorphed.id("textures/gui/selected.png"), getX(), getY(), 0, 0, getWidth(), getHeight(), 48, 32, 48, 32);

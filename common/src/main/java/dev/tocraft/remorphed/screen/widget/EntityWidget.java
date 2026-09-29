@@ -51,8 +51,8 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
     }
 
     @Override
-    protected void renderShape(GuiGraphics guiGraphics) {
-        // Render 3D entity model in the center using vanilla InventoryScreen centering logic
+    protected void renderShape(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // Render 3D entity model in the center with clean front-facing perspective
         try {
             int leftPos = getX() + getWidth() / 2;
             int topPos = getY() + getHeight() / 2;
@@ -60,7 +60,7 @@ public class EntityWidget<T extends LivingEntity> extends ShapeWidget {
             int y1 = topPos - 16;
             int x2 = leftPos + 20;
             int y2 = topPos + 16;
-            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, x1, y1, x2, y2, size, 0.0625F, 0.0F, 0.0F, entity);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, x1, y1, x2, y2, size, 0.0625F, leftPos, topPos, entity);
         } catch (Exception e) {
             Remorphed.LOGGER.error("Error while rendering {}", ShapeType.createTooltipText(entity).getString(), e);
             setCrashed();

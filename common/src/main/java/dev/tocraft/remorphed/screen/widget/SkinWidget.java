@@ -46,7 +46,7 @@ public class SkinWidget extends ShapeWidget {
     }
 
     @Override
-    protected void renderShape(GuiGraphics guiGraphics) {
+    protected void renderShape(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (skin != null) {
             int leftPos = getX() + getWidth() / 2;
             int topPos = getY() + getHeight() / 2;
@@ -54,10 +54,9 @@ public class SkinWidget extends ShapeWidget {
             int y1 = topPos - 16;
             int x2 = leftPos + 20;
             int y2 = topPos + 16;
-            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, x1, y1, x2, y2, size, 0.0625F, 0.0F, 0.0F, fakePlayer);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, x1, y1, x2, y2, size, 0.0625F, leftPos, topPos, fakePlayer);
         }
     }
-
     @Override
     void sendDeleteShapePacket() {
         NetworkHandler.sendDeleteShapePacket(skin.id());
