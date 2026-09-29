@@ -363,7 +363,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Remorphe
         }
 
         int counter = remorphed$SkinMorphCounter.getOrDefault(skinId, 0) + 1;
-        counter++;
         int killValue = Remorphed.CONFIG.playerKillValue;
         if (killValue > 0 && counter >= killValue) {
             // reset counter
